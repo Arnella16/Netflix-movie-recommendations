@@ -1,54 +1,49 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useEmail } from './email-context';
-import Button from './button';
+// const express = require("express");
+import express from "express";
+import dotenv from "dotenv";
+import databaseConnection from "./utils/database.js";
+import cookieParser from "cookie-parser";
+import userRouter from "./routes/user-route.js";
+import cors from "cors";
 
-const Body = () => {
-  const { email, setEmail } = useEmail();
-  const navigate = useNavigate();
+databaseConnection();
 
-  const handleChange = (e) => {
-    setEmail(e.target.value);
-  };
+dotenv.config({
+    path: ".env"
+})
 
-  const handleSignUp = () => {
-    console.log('Navigating to /register');
-    navigate('/register');
-  };
+const app = express();
+app.use(express.urlencoded({extended:true}));
+app.use(express.json());
+app.use(cookieParser());
+app.use(cors());
 
-  const getInputData = (e) =>{
-    // e.preventDefault();
-  }
+// app.get("/", (req,res)=>{
+//     res.status(200).json({
+//         message:"Hello"
+//     })
+// })
 
-  const BoxStyle = {
-    backgroundColor: 'black',
-    color: 'grey',
-    width: '18rem',
-    padding: '0.5rem',
-    border: '1px grey solid',
-    borderRadius: '0.5rem',
-    marginRight:'1rem',
-  };
+app.post('/api/v1/user/register', (req, res) => {
+    // Handle registration logic here
+    res.send('User registered successfully');
+});
 
-  return (
-    <div style={{ marginTop: '15rem', textAlign: 'center' }}>
-      <h1 style={{ color: 'white', fontSize: '40px', fontWeight: '700' }}>
-        Watch Unlimited Movies!
-      </h1>
-      <form onSubmit={getInputData}>
-      <div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
-        <input
-          type='email'
-          value={email}
-          onChange={handleChange}
-          style={BoxStyle}
-          placeholder='Enter your email address'
-        />
-        <Button width='5rem' onClick={handleSignUp}>Sign Up!</Button>
-      </div>
-      </form>
-    </div>
-  );
-}
+app.use("/api/v1/user" , userRouter);
 
-export default Body;
+app.listen(process.env.PORT, ()=>{
+    console.log(`Server at port ${process.env.PORT}`);
+})
+
+
+// Example using Express.js
+const router = express.Router();
+
+// Define your route
+router.get('/api/v1/user/', (req, res) => {
+    // Handle GET request for /api/v1/user/
+    // Typically, you would fetch user data and send a response
+    res.send('User information'); // Example response
+});
+
+export default router;
