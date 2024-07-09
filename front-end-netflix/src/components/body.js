@@ -1,49 +1,141 @@
-// const express = require("express");
-import express from "express";
-import dotenv from "dotenv";
-import databaseConnection from "./utils/database.js";
-import cookieParser from "cookie-parser";
-import userRouter from "./routes/user-route.js";
-import cors from "cors";
+// import React from 'react';
+// import { useNavigate } from 'react-router-dom';
+// import { useEmail } from './email-context';
+// import Button from './button';
 
-databaseConnection();
+// const Body = () => {
+//   const { email, setEmail } = useEmail();
+//   const navigate = useNavigate();
 
-dotenv.config({
-    path: ".env"
-})
+//   const handleChange = (e) => {
+//     setEmail(e.target.value);
+//   };
 
-const app = express();
-app.use(express.urlencoded({extended:true}));
-app.use(express.json());
-app.use(cookieParser());
-app.use(cors());
+//   const handleSignUp = () => {
+//     console.log('Navigating to /register');
+//     navigate('/register');
+//   };
 
-// app.get("/", (req,res)=>{
-//     res.status(200).json({
-//         message:"Hello"
-//     })
-// })
+//   const handleKeyPress = (e) => {
+//     if (e.key === 'Enter') {
+//       handleSignUp();
+//     }
+//   };
 
-app.post('/api/v1/user/register', (req, res) => {
-    // Handle registration logic here
-    res.send('User registered successfully');
-});
+//   const getInputData = (e) =>{
+//     // e.preventDefault();
+//   }
 
-app.use("/api/v1/user" , userRouter);
+//   const BoxStyle = {
+//     backgroundColor: 'black',
+//     color: 'grey',
+//     width: '18rem',
+//     padding: '0.5rem',
+//     border: '1px grey solid',
+//     borderRadius: '0.5rem',
+//     marginRight:'1rem',
+//   };
 
-app.listen(process.env.PORT, ()=>{
-    console.log(`Server at port ${process.env.PORT}`);
-})
+//   return (
+//     <div style={{ marginTop: '15rem', textAlign: 'center' }}>
+//       <h1 style={{ color: 'white', fontSize: '40px', fontWeight: '700' }}>
+//         Watch Unlimited Movies!
+//       </h1>
+//       <form onSubmit={getInputData}>
+//       <div style={{display:'flex', justifyContent:'center', alignItems:'center'}}>
+//         <input
+//           type='email'
+//           value={email}
+//           onChange={handleChange}
+//           onKeyPress={handleKeyPress}
+//           style={BoxStyle}
+//           placeholder='Enter your email address'
+//         />
+//         <Button width='5rem' onClick={handleSignUp}>Sign Up!</Button>
+//       </div>
+//       </form>
+//     </div>
+//   );
+// }
+
+// export default Body;
 
 
-// Example using Express.js
-const router = express.Router();
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Button from './button';
+import { useEmail } from './email-context';
 
-// Define your route
-router.get('/api/v1/user/', (req, res) => {
-    // Handle GET request for /api/v1/user/
-    // Typically, you would fetch user data and send a response
-    res.send('User information'); // Example response
-});
+const Body = () => {
+  const { email, setEmail } = useEmail();
+  const navigate = useNavigate();
+  const [error, setError] = useState('');
 
-export default router;
+  const handleSignUp = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/api/v1/user/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Registration failed');
+      }
+
+      navigate('/register');
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  const handleChange = (e) => {
+    // You can update context here if needed
+    setEmail(e.target.value);
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSignUp();
+    }
+  };
+
+  const BoxStyle = {
+    backgroundColor: 'black',
+    color: 'grey',
+    width: '18rem',
+    padding: '0.5rem',
+    border: '1px grey solid',
+    borderRadius: '0.5rem',
+    marginRight: '1rem',
+  };
+
+  return (
+    <div style={{ marginTop: '15rem', textAlign: 'center' }}>
+      <h1 style={{ color: 'white', fontSize: '40px', fontWeight: '700' }}>
+        Watch Unlimited Movies!
+      </h1>
+      <form onSubmit={(e) => e.preventDefault()}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <input
+            type='email'
+            value={email}
+            onChange={handleChange}
+            onKeyPress={handleKeyPress}
+            style={BoxStyle}
+            placeholder='Enter your email address'
+          />
+          <Button width='5rem' onClick={handleSignUp}>
+            Sign Up!
+          </Button>
+        </div>
+      </form>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+    </div>
+  );
+};
+
+export default Body;
