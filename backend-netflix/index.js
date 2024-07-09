@@ -24,26 +24,8 @@ app.use(cors());
 //     })
 // })
 
-app.post('/api/v1/user/register', (req, res) => {
-    // Handle registration logic here
-    res.send('User registered successfully');
-});
-
-app.use("/api/v1/user" , userRouter);
+app.use("/api/v1/user/" , userRouter);
 
 app.listen(process.env.PORT, ()=>{
     console.log(`Server at port ${process.env.PORT}`);
 })
-
-
-// Example using Express.js
-const router = express.Router();
-
-// Define your route
-router.get('/api/v1/user/', (req, res) => {
-    // Handle GET request for /api/v1/user/
-    // Typically, you would fetch user data and send a response
-    res.send('User information'); // Example response
-});
-
-export default router;
