@@ -1,52 +1,14 @@
-// import { User } from "../models/userModel.js";
-
-// export const Register = async(req,res) =>{
-//     try{
-//         const { email } = req.body; 
-//         const { password } = req.body; 
-
-//         if(!email || !password){
-//             return res.status(400).json({
-//                 message:"Invalid Data",
-//                 success:false
-//             });
-//         }
-
-//         const user = await User.findOne({email});
-//         if(user){
-//             return res.status(400).json({
-//                 message:"This email is already in use",
-//                 success:false
-//             });
-//         }
-
-//         await User.create({
-//             email,
-//             password
-//         });
-
-//         return res.status(201).json({
-//             message:"Account created successfully."
-//         });
-//     }
-//     catch(error){
-//         console.error('Error:', error);
-//         return res.status(500).json({
-//             message: "Internal Server Error",
-//             success: false
-//         });
-//     }
-// };
-
-
 // controllers/user.js
 
 import User from '../models/userModel.js';
+import bycryptjs from "bcryptjs";
 
 export const Register = async (req, res) => {
+    // console.log('mukesh is dumb');
     try {
         const { email } = req.body; 
         const { password } = req.body;
+        console.log('Email:', email, 'Password:', password);
 
         if (!email || !password) {
             return res.status(400).json({
@@ -64,8 +26,10 @@ export const Register = async (req, res) => {
             });
         }
 
+        const hashedPassword = await bycryptjs.hash(password,16);
+
         // Create a new user
-        const newUser = new User({ email, password });
+        const newUser = new User({ email, password:hashedPassword });
         await newUser.save();
 
         return res.status(201).json({
