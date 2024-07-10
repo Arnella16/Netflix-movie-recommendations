@@ -6,6 +6,8 @@ import Login from './components/login';
 import Register from './components/register';
 import { EmailProvider } from './components/email-context';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import Main from './components/main-page';
+import MovieDetail from './components/MovieDetail';
 
 const browserRouter = createBrowserRouter([
   {
@@ -23,6 +25,14 @@ const browserRouter = createBrowserRouter([
   {
     path: "/register",
     element: <Register />
+  },
+  {
+    path:'/main',
+    element:<Main></Main>
+  },
+  {
+    path:'/detail',
+    element:<MovieDetail></MovieDetail>
   }
 ]);
 
