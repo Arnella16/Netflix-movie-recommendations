@@ -1,0 +1,40 @@
+.movie-card {
+    position: relative;
+    width: 200px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.movie-image {
+    width: 100%;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.more-info {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    opacity: 0;
+    font-size: 20px;
+    font-weight: 500;
+    transition: opacity 0.3s ease;
+    border-radius: 8px;
+}
+
+.movie-card:hover .movie-image {
+    background-color: rgba(128, 128, 128, 0.5);
+}
+
+.movie-card:hover .more-info {
+    opacity: 1;
+}
